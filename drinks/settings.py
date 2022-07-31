@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'drinks.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycogp2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mydb',
         'USER': 'shubham',
         'PASSWORD': '2311',
