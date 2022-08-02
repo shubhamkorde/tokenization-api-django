@@ -2,7 +2,7 @@ from curses.ascii import isdigit
 import re
 import json
 
-valid_keys = ['temperature', 'effacement', 'fhr', 'pulse', 'dilatation', 'bp']
+valid_keys = ['temperature', 'effacement', 'fhr', 'pulse', 'dilatation', 'bp', 'discharge']
 
 def check_int(str):
     return re.match(r"[-+]?\d+(\.0*)?$", str) is not None
@@ -61,15 +61,42 @@ def parse(query):
     # query = "temperature 88.3 degree bp 120 bata 80 celcius pulse 93 bpm effacement mota dilatation 8 centimeter" 
     query = query.lower()
     key_value_pairs = dict()
+    response = {
+            'temperature': -1,
+            'dilatation': -1,
+            'pulse': -1,
+            'fhr': -1,
+            'bp_systolic': -1,
+            'bp_diastolic': -1,
+            'effacement': -1, 
+            'drugs': 'n/a',
+            'discharge': 'n/a'
+        } 
     while len(query) != 0:
-        
         # Removong unnecessary words
         query = remove_non_keywords(query)
         if query == "":
             break
         key = query.split()[0]
         key, value, query = get_value(query.split(' ', 1)[1], key) 
-        key_value_pairs[key] = value
-    
-    json_data = json.dumps(key_value_pairs)
-    return json_data
+        if key == 'bp':
+            response['bp_systolic'] = value[0]
+            response['bp_diastolic'] = value[1]
+        elif key == 'dilatation':
+            response['dilatation'] = value
+        elif key == 'drugs':
+            response['drugs'] = value
+        elif key == 'fhr':
+            response['fhr'] = value
+        elif key == 'effacement':
+            response['effacement'] = value
+        elif key == 'pulse':
+            response['pulse'] = value
+        elif key == 'temperature':
+            response['temperature'] = value
+        elif key == 'discharge':
+            response['discharge'] = value
+        else:
+            print("incorrect key received")
+    print(response)
+    return response

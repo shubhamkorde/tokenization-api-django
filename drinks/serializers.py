@@ -11,4 +11,4 @@ class DrinkSerializer(serializers.ModelSerializer):
 class TranscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transcription
-        fields = ['id', 'name', 'text', 'tokens']
+        fields = ['id', 'name', 'text', 'temperature', 'pulse', 'bp_systolic', 'bp_diastolic', 'discharge', 'drugs', 'fhr', 'effacement', 'dilatation']

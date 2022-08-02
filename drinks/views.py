@@ -60,8 +60,16 @@ def transcription_list(request):
         # new_data['id'] = request.data['id']
         new_data['name'] = request.data['name']
         new_data['text'] = request.data['text']
-        new_data['tokens'] = parse(request.data['text'])
-
+        resp = parse(request.data['text'])
+        new_data['temperature'] = resp['temperature']
+        new_data['pulse'] = resp['pulse']
+        new_data['bp_systolic'] = resp['bp_systolic']
+        new_data['bp_diastolic'] = resp['bp_diastolic']
+        new_data['discharge'] = resp['discharge']
+        new_data['drugs'] = resp['drugs']
+        new_data['fhr'] = resp['fhr']
+        new_data['dilatation'] = resp['dilatation']
+        
         serializer = TranscriptionSerializer(data=new_data)
         if serializer.is_valid():
             serializer.save()
