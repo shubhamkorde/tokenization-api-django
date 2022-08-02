@@ -48,17 +48,18 @@ def get_value(query_string, key):
         value2 = get_first_word(query_string)
         return key, [value1, value2], rem
     
-    if key in valid_keys:
+    elif key in valid_keys:
         value = query_string.split()[0]
         if len(query_string.split()) == 1:
             rem = ""
         else:
             rem = query_string.split(' ', 1)[1]
         return key, value, rem
-    
+
 def parse(query):
     """"This will be the main method"""
     # query = "temperature 88.3 degree bp 120 bata 80 celcius pulse 93 bpm effacement mota dilatation 8 centimeter" 
+    query = query.lower()
     key_value_pairs = dict()
     while len(query) != 0:
         
