@@ -2,13 +2,15 @@ from curses.ascii import isdigit
 import re
 import json
 
-valid_keys = ['temperature', 'effacement', 'fhr', 'pulse', 'dilatation', 'bp', 'discharge']
-
+valid_keys = ['temperature', 'effacement', 'fhr', 'pulse', 'dilatation', 'bp', 'discharge', 'drugs']
+valid_drugs = ['lignocaine']
+valid_discharge = ['red']
+valid_words = valid_keys + valid_drugs + valid_discharge
 def check_int(str):
     return re.match(r"[-+]?\d+(\.0*)?$", str) is not None
 
 def remove_non_keywords(query):
-    while query.split()[0] not in valid_keys:
+    while query.split()[0] not in valid_words:
         if len(query.split(' ')) > 1:
             query = query.split(' ', 1)[1]
         else:
@@ -56,11 +58,17 @@ def get_value(query_string, key):
             rem = query_string.split(' ', 1)[1]
         return key, value, rem
 
+def is_float(element):
+    try:
+        float(element)
+        return True
+    except ValueError:
+        return False
+
 def parse(query):
     """"This will be the main method"""
     # query = "temperature 88.3 degree bp 120 bata 80 celcius pulse 93 bpm effacement mota dilatation 8 centimeter" 
     query = query.lower()
-    key_value_pairs = dict()
     response = {
             'temperature': -1,
             'dilatation': -1,
@@ -75,28 +83,47 @@ def parse(query):
     while len(query) != 0:
         # Removong unnecessary words
         query = remove_non_keywords(query)
+        # print(query)
         if query == "":
             break
         key = query.split()[0]
         key, value, query = get_value(query.split(' ', 1)[1], key) 
+        # print("key is ", key)
+        # print("value is ", value)
+        # print("query is ", query)
         if key == 'bp':
-            response['bp_systolic'] = value[0]
-            response['bp_diastolic'] = value[1]
+            if value[0].isdigit:
+                response['bp_systolic'] = value[0]
+            if value[1].isdigit:
+                response['bp_diastolic'] = value[1]
         elif key == 'dilatation':
-            response['dilatation'] = value
+            if value.isdigit:
+                response['dilatation'] = value
         elif key == 'drugs':
-            response['drugs'] = value
+            if value in valid_drugs:
+                response['drugs'] = value
         elif key == 'fhr':
-            response['fhr'] = value
+            if value.isdigit:
+                response['fhr'] = value
         elif key == 'effacement':
-            response['effacement'] = value
+            if value.isdigit:
+                response['effacement'] = value
         elif key == 'pulse':
-            response['pulse'] = value
+            if value.isdigit:
+                response['pulse'] = value
         elif key == 'temperature':
-            response['temperature'] = value
+            if is_float(value):
+                response['temperature'] = value
         elif key == 'discharge':
-            response['discharge'] = value
+            if value in valid_discharge:
+                response['discharge'] = value
         else:
             print("incorrect key received")
     print(response)
     return response
+
+def main():
+    parse("drugs lignocaine")
+
+if __name__ == "__main__":
+    main()
