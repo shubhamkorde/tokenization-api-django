@@ -69,6 +69,7 @@ def transcription_list(request):
         new_data['drugs'] = resp['drugs']
         new_data['fhr'] = resp['fhr']
         new_data['dilatation'] = resp['dilatation']
+        new_data['effacement'] = resp['effacement']
         
         serializer = TranscriptionSerializer(data=new_data)
         if serializer.is_valid():
