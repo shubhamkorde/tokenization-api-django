@@ -3,8 +3,8 @@ import re
 import json
 
 valid_keys = ['temperature', 'effacement', 'fhr', 'pulse', 'dilatation', 'bp', 'discharge', 'drugs']
-valid_drugs = ['lignocaine']
-valid_discharge = ['red']
+valid_drugs = ['lignocaine', 'intravenous fluid rl', 'intravenous fluid ns', 'injection oxytocin', 'injection mgso4', 'others']
+valid_discharge = ['red', 'clear', 'bloody', 'green', 'foul smelling', 'thick', 'intact', 'others']
 valid_words = valid_keys + valid_drugs + valid_discharge
 def check_int(str):
     return re.match(r"[-+]?\d+(\.0*)?$", str) is not None
@@ -92,24 +92,24 @@ def parse(query):
         # print("value is ", value)
         # print("query is ", query)
         if key == 'bp':
-            if value[0].isdigit:
+            if value[0].isdigit():
                 response['bp_systolic'] = value[0]
-            if value[1].isdigit:
+            if value[1].isdigit():
                 response['bp_diastolic'] = value[1]
         elif key == 'dilatation':
-            if value.isdigit:
+            if value.isdigit():
                 response['dilatation'] = value
         elif key == 'drugs':
             if value in valid_drugs:
                 response['drugs'] = value
         elif key == 'fhr':
-            if value.isdigit:
+            if value.isdigit():
                 response['fhr'] = value
         elif key == 'effacement':
-            if value.isdigit:
+            if value.isdigit():
                 response['effacement'] = value
         elif key == 'pulse':
-            if value.isdigit:
+            if value.isdigit():
                 response['pulse'] = value
         elif key == 'temperature':
             if is_float(value):
@@ -123,7 +123,7 @@ def parse(query):
     return response
 
 def main():
-    parse("drugs lignocaine")
+    parse("dilatation 4")
 
 if __name__ == "__main__":
     main()
